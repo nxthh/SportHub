@@ -21,7 +21,8 @@ export async function generateMetadata({
       title: event.name,
       description: event.description || `Explore ${event.name} on SportsHub.`,
       path: `/events/${encodeURIComponent(event.uuid)}`,
-      image: event.imageUrls?.[0],
+      image: event.imageUrls?.find((image) => image.trim()),
+      type: "article",
     });
   } catch (error) {
     if (error instanceof ApiError && error.status === 404) notFound();

@@ -20,15 +20,25 @@ import {
 } from "lucide-react";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { EmptyState } from "@/components/ui/EmptyState";
-
-export const metadata: Metadata = {
-  title: "Search Results",
-  description: "Search across all sports, events, categories, and information on SportsHub.",
-  robots: { index: false, follow: true },
-};
+import { createPageMetadata, getSeoSearchQuery } from "@/lib/seo";
 
 interface SearchPageProps {
   searchParams?: Promise<{ q?: string }>;
+}
+
+export async function generateMetadata({
+  searchParams,
+}: SearchPageProps): Promise<Metadata> {
+  const resolvedParams = await searchParams;
+  const query = getSeoSearchQuery(resolvedParams?.q);
+  return createPageMetadata({
+    title: query ? `Search results for "${query}"` : "Search SportsHub",
+    description: query
+      ? `Search results for "${query}" across sports, events, and categories on SportsHub.`
+      : "Search across all sports, events, categories, and information on SportsHub.",
+    path: "/search",
+    noIndex: true,
+  });
 }
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {

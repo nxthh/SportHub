@@ -1,11 +1,13 @@
-import { AuthForm } from "@/components/auth/AuthForm";
 import type { Metadata } from "next";
+import { AuthForm } from "@/components/auth/AuthForm";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: "Sign In",
   description: "Sign in or create a SportsHub account to manage favorites and join the conversation.",
-  robots: { index: false, follow: true },
-};
+  path: "/auth",
+  noIndex: true,
+});
 
 export default function AuthPage() {
   return (

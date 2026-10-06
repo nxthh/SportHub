@@ -6,16 +6,24 @@ import { ErrorState } from "@/components/ui/ErrorState";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Sport } from "@/types/sport";
 import type { Metadata } from "next";
-import { createPageMetadata } from "@/lib/seo";
-
-export const metadata: Metadata = createPageMetadata({
-  title: "Sports",
-  description: "Browse sports disciplines and discover athletes, competitions, and sports information on SportsHub.",
-  path: "/sports",
-});
+import { createPageMetadata, getSeoSearchQuery } from "@/lib/seo";
 
 interface SportsPageProps {
   searchParams?: Promise<{ search?: string; q?: string }>;
+}
+
+export async function generateMetadata({
+  searchParams,
+}: SportsPageProps): Promise<Metadata> {
+  const resolvedParams = await searchParams;
+  const query = getSeoSearchQuery(resolvedParams?.search, resolvedParams?.q);
+  return createPageMetadata({
+    title: query ? `Sports matching "${query}"` : "Sports",
+    description: query
+      ? `Browse sports disciplines matching "${query}" on SportsHub.`
+      : "Browse sports disciplines and discover athletes, competitions, and sports information on SportsHub.",
+    path: "/sports",
+  });
 }
 
 export default async function SportsPage({ searchParams }: SportsPageProps) {

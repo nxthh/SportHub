@@ -26,6 +26,7 @@ export async function generateMetadata({ params }: CategoryDetailsPageProps): Pr
       description,
       path: `/categories/${encodeURIComponent(category.uuid)}`,
       image: getCategoryCoverImage(category),
+      type: "article",
     });
   } catch (error) {
     if (error instanceof ApiError && error.status === 404) notFound();

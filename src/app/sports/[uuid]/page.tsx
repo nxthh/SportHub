@@ -17,7 +17,8 @@ export async function generateMetadata({ params }: SportDetailsPageProps): Promi
       title: sport.name,
       description: sport.description || `Discover ${sport.name} on SportsHub.`,
       path: `/sports/${encodeURIComponent(sport.uuid)}`,
-      image: sport.imageUrls?.[0],
+      image: sport.imageUrls?.find((image) => image.trim()),
+      type: "article",
     });
   } catch (error) {
     if (error instanceof Error && error.message.includes("404")) notFound();

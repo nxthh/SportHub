@@ -6,16 +6,24 @@ import { SectionTitle } from "@/components/ui/SectionTitle";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Event } from "@/types/event";
-import { createPageMetadata } from "@/lib/seo";
-
-export const metadata: Metadata = createPageMetadata({
-  title: "Events",
-  description: "Explore live matches, competitive tournaments, and athletic events across all sports disciplines.",
-  path: "/events",
-});
+import { createPageMetadata, getSeoSearchQuery } from "@/lib/seo";
 
 interface EventsPageProps {
   searchParams?: Promise<{ search?: string; q?: string }>;
+}
+
+export async function generateMetadata({
+  searchParams,
+}: EventsPageProps): Promise<Metadata> {
+  const resolvedParams = await searchParams;
+  const query = getSeoSearchQuery(resolvedParams?.search, resolvedParams?.q);
+  return createPageMetadata({
+    title: query ? `Events matching "${query}"` : "Events",
+    description: query
+      ? `Explore sports events matching "${query}" on SportsHub.`
+      : "Explore live matches, competitive tournaments, and athletic events across all sports disciplines.",
+    path: "/events",
+  });
 }
 
 export default async function EventsPage({ searchParams }: EventsPageProps) {

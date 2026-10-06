@@ -7,14 +7,16 @@ import { FavoritesView } from "@/components/favorites/FavoritesView";
 import { Sport } from "@/types/sport";
 import { Event } from "@/types/event";
 import type { Metadata } from "next";
+import { createPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: "Favorites",
   description: "View your saved sports and events on SportsHub.",
-  robots: { index: false, follow: true },
-};
+  path: "/favorites",
+  noIndex: true,
+});
 
 export default async function FavoritesPage() {
   let error: string | null = null;

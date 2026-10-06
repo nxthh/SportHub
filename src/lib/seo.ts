@@ -18,6 +18,13 @@ interface PageMetadataOptions {
   path: string;
   image?: string;
   noIndex?: boolean;
+  type?: "website" | "article";
+}
+
+export function getSeoSearchQuery(...queries: (string | undefined)[]): string {
+  const query = queries.find((value) => value?.trim())?.trim().replace(/\s+/g, " ");
+  if (!query) return "";
+  return query.length > 60 ? `${query.slice(0, 57).trimEnd()}...` : query;
 }
 
 function getSeoDescription(description: string): string {
@@ -32,11 +39,13 @@ export function createPageMetadata({
   path,
   image = "/thumbnail.png",
   noIndex = false,
+  type = "website",
 }: PageMetadataOptions): Metadata {
   const seoDescription =
     getSeoDescription(description) ||
     "Discover sports, events, and competitions with SportsHub.";
   const socialTitle = `${title} | SportsHub`;
+  const socialImage = image.trim() || "/thumbnail.png";
 
   return {
     title,
@@ -46,14 +55,14 @@ export function createPageMetadata({
       title: socialTitle,
       description: seoDescription,
       url: path,
-      type: "website",
-      images: [{ url: image, alt: title }],
+      type,
+      images: [{ url: socialImage, alt: title }],
     },
     twitter: {
       card: "summary_large_image",
       title: socialTitle,
       description: seoDescription,
-      images: [image],
+      images: [socialImage],
     },
     ...(noIndex ? { robots: { index: false, follow: true } } : {}),
   };

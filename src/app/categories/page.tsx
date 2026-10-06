@@ -6,16 +6,24 @@ import { SectionTitle } from "@/components/ui/SectionTitle";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { SportCategory } from "@/types/category";
-import { createPageMetadata } from "@/lib/seo";
-
-export const metadata: Metadata = createPageMetadata({
-  title: "Categories",
-  description: "Browse sports organized by disciplines, from ball sports and water activities to combat arts and motorsports.",
-  path: "/categories",
-});
+import { createPageMetadata, getSeoSearchQuery } from "@/lib/seo";
 
 interface CategoriesPageProps {
   searchParams?: Promise<{ search?: string; q?: string }>;
+}
+
+export async function generateMetadata({
+  searchParams,
+}: CategoriesPageProps): Promise<Metadata> {
+  const resolvedParams = await searchParams;
+  const query = getSeoSearchQuery(resolvedParams?.search, resolvedParams?.q);
+  return createPageMetadata({
+    title: query ? `Categories matching "${query}"` : "Categories",
+    description: query
+      ? `Browse sports categories matching "${query}" on SportsHub.`
+      : "Browse sports organized by disciplines, from ball sports and water activities to combat arts and motorsports.",
+    path: "/categories",
+  });
 }
 
 export default async function CategoriesPage({ searchParams }: CategoriesPageProps) {
